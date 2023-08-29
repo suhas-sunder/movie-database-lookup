@@ -1,4 +1,3 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Components
@@ -10,8 +9,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/info" element={<InfoPage />} />
-      <Route path="/update" element={<UpdatePage />} />
+      <Route path="/movies/:id" element={<InfoPage />} />
+      <Route path="/movies/:id/update" element={<UpdatePage />} />
       <Route path="*" element={<h2>404 Not Found!</h2>} />
     </Routes>
   );
