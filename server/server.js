@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Get request for all movies
-app.get("/api/v1/movies", async (req, res) => {
+app.get("/api/v1/words", async (req, res) => {
   // With express, anytime you have async await, wrap it in a try catch block.
   try {
     const results = await db.query("SELECT * FROM movies");
@@ -44,7 +44,7 @@ app.get("/api/v1/movies", async (req, res) => {
 //Get a Movie
 //The callback function in this is called a route handler. Thats the (req, res) => {} part of the code. It has a request and response object.
 //When you check an id example id=123 where the url ends with /api/v1/movies/123, then it is stored under params within the request object. So doing req.params should show { id: '33' }
-app.get("/api/v1/movies/:id", async (req, res) => {
+app.get("/api/v1/words/:id", async (req, res) => {
   try {
     // const results = await db.query(`SELECT * FROM restaurants where id = ${req.params.id}`); //DOING THIS IS BAD. Will make your code vulnerable to SQL attacks. Use parameterized query instead.
     const results = await db.query("SELECT * FROM movies where id = $1", [
@@ -63,7 +63,7 @@ app.get("/api/v1/movies/:id", async (req, res) => {
 });
 
 // Create a movie
-app.post("/api/v1/movies/:id", async (req, res) => {
+app.post("/api/v1/words/:id", async (req, res) => {
   try {
     const results = await db.query(
       "INSERT INTO movies (title, genre, plot, rating) VALUES ($1, $2, $3, $4) returning *",
@@ -82,7 +82,7 @@ app.post("/api/v1/movies/:id", async (req, res) => {
 });
 
 // Update existing movie(s)
-app.put("/api/v1/movies/:id", async (req, res) => {
+app.put("/api/v1/words/:id", async (req, res) => {
   const results = await db.query(
     "UPDATE movies SET title = $1, genre = $2, plot = $3, rating = $4 WHERE id = $5 returning *",
     [
@@ -103,7 +103,7 @@ app.put("/api/v1/movies/:id", async (req, res) => {
 });
 
 // Delete existing movie(s)
-app.delete("/api/v1/movies/:id", async (req, res) => {
+app.delete("/api/v1/words/:id", async (req, res) => {
   try {
     const results = await db.query("DELETE FROM movies where id = $1", [
       req.params.id,
