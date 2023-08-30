@@ -1,6 +1,28 @@
-import React from "react";
+import { useEffect, useRef, useContext } from "react";
+import MovieSearchAPI from "../apis/MovieSearchAPI";
+import { MoviesContext } from "../context/MoviesContext";
 
 function Movies() {
+  const renderRef = useRef(false);
+  const { movies, setMovies } = useContext(MoviesContext);
+  useEffect(() => {
+    async function fetchData() {
+      renderRef.current = true;
+
+      try {
+        const response = await MovieSearchAPI.get("/"); //This takes the URL configured in MovieSearchAPI and adds "/" to the end before making a get request.
+        setMovies((prevState: any) => [
+          ...prevState,
+          response.data.data.movies,
+        ]);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    !renderRef.current && fetchData(); //Checking renderRef stops axios from running twice.
+  }, []);
+
   return (
     <div>
       <table className="table-auto">
