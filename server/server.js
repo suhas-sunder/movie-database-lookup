@@ -2,7 +2,8 @@ const express = require("express");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 3100;
+const port = process.env.PORT || 3001;
+const cors = require("cors");
 const db = require("./db");
 
 // // Middleware - Should be defined at the top, or it will simply run the route handler and skip this.
@@ -11,6 +12,10 @@ const db = require("./db");
 //   console.log("middleware running");
 //   next();
 // });
+
+// middleware for cors - npm i cors is needed too
+//Since two different domains can't talk to each other without this, using axios to fetch data from our back-end API will throw an error.
+app.use(cors());
 
 // A built-in middleware for express that parses incoming requests with JSON payloads and is based on body-parser
 // It takes the json object and converts it into a standard object in JavaScript.
@@ -31,7 +36,6 @@ app.get("/api/v1/movies", async (req, res) => {
         movies: results.rows,
       },
     });
-    console.log("get movie");
   } catch (err) {
     console.log(err);
   }
@@ -46,8 +50,6 @@ app.get("/api/v1/movies/:id", async (req, res) => {
     const results = await db.query("SELECT * FROM movies where id = $1", [
       req.params.id,
     ]);
-
-    console.log(results.rows);
 
     res.status(200).json({
       status: "success",
