@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
-import AddSearchMovies from "../components/AddSearchMovies";
-import Movies from "../components/Movies";
+import AddSearchMovies from "../components/AddSearchWords";
+import Movies from "../components/WordsList";
 
 function Home() {
   return (
