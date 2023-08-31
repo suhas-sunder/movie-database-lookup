@@ -10,7 +10,7 @@ function WordsList() {
     async function fetchData() {
       renderRef.current = true;
       try {
-        const response = await WordSearchAPI.get("/"); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
+        const response = await WordSearchAPI.get("/words"); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
         setWords((prevState: any) => [
           ...prevState,
           ...response.data.data.words,
