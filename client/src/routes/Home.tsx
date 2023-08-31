@@ -17,7 +17,10 @@ function Home() {
     <div className="flex flex-col w-full justify-center items-center">
       <Header />
       <AddSearchWords setSearchResults={setSearchResults} />
-      <WordsList setSearchResults={setSearchResults} searchResults={searchResults} />
+      <WordsList
+        setSearchResults={setSearchResults}
+        searchResults={searchResults}
+      />
     </div>
   );
 }
