@@ -1,14 +1,21 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
 import WordSearchAPI from "../apis/WordSearchAPI";
 import { WordsContext } from "../context/WordsContext";
 
-function WordsList() {
+function WordsList({ searchResults }: any) {
   const renderRef = useRef(false);
-  const { words, setWords } = useContext(WordsContext);
 
-  const handleAddToPlaylist = () => {};
+  const handleAddToPlaylist = (id: number) => {
+    // Add word to words wordbank
+    // Add id to relevant playlist
+    console.log(id);
+  };
 
   const handleDeleteWord = async (id: number) => {
+    // Remove word from playlist but not wordbank.
+    // Remove word from word bank if deleted from word bank directly.
+    // Removing from wordbank will remove words from all playlists. Display a modal to confirm action.
+
     // try {
     //   // Delete word from database
     //   const response = await WordSearchAPI.delete(`/words/${id}`); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
@@ -25,26 +32,9 @@ function WordsList() {
     //   console.log(err);
     // }
 
-    setWords(words.filter((word: any) => word.id !== id));
+    // setWords(words.filter((word: any) => word.id !== id));
     console.log(id);
   };
-
-  // Load playlist data
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     renderRef.current = true;
-  //     try {
-  //       const response = await WordSearchAPI.get("/words"); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
-  //       setWords((prevState: any) => [
-  //         ...prevState,
-  //         ...response.data.data.words,
-  //       ]);
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  //   !renderRef.current && fetchData(); //Checking renderRef stops axios from running twice.
-  // }, []);
 
   return (
     <div>
@@ -72,8 +62,8 @@ function WordsList() {
           </tr>
         </thead>
         <tbody>
-          {words &&
-            words.map((word: any) => (
+          {searchResults &&
+            searchResults.map((word: any) => (
               <tr key={word.id} className="bg-white">
                 <td className="p-3 text-sm text-gray-700">
                   <button
@@ -87,29 +77,30 @@ function WordsList() {
                 <td className="p-3 text-sm text-gray-700">{word.word}</td>
                 <td className="p-3 text-sm text-gray-700">{word.score}</td>
                 <td className="p-3 text-sm text-gray-700">
-                  {word.tags && word.tags
-                    .map((tag: any, index: number) =>
-                      index !== word.tags.length - 1
-                        ? " " + tag + ","
-                        : " " + tag
-                    )
-                    .join("")
-                    .trim()}
+                  {word.tags &&
+                    word.tags
+                      .map((tag: any, index: number) =>
+                        index !== word.tags.length - 1
+                          ? " " + tag + ","
+                          : " " + tag
+                      )
+                      .join("")
+                      .trim()}
                 </td>
                 <td className="p-3 text-sm text-gray-700">
                   <select
                     aria-label="Select a playlist"
                     className="border-2 border-gray-300 rounded p-1 pl-2 text-sm cursor-pointer"
                   >
-                    <option>Favourites</option>
                     <option>WordBank</option>
+                    <option>Favourites</option>
                   </select>
                 </td>
                 <td className="p-3 text-sm text-gray-700">
                   <button
                     aria-label="Add word to playlist"
                     className="border-2 border-green-700 rounded bg-green-700 text-white text-sm p-1 pl-3 pr-3 hover:bg-white hover:text-green-700"
-                    onClick={() => handleAddToPlaylist()}
+                    onClick={() => handleAddToPlaylist(word.id)}
                   >
                     Add
                   </button>

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 // Components
 import Home from "./routes/Home";
 import UpdatePage from "./routes/UpdatePage";
-import InfoPage from "./routes/InfoPage";
+import InfoPage from "./routes/WordBank";
 import { WordsContextProvider } from "./context/WordsContext";
 import { PlaylistContextProvider } from "./context/PlaylistContext";
 

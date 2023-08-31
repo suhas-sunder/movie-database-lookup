@@ -35,6 +35,7 @@ app.post("/api/v1/datamuse/search", async (req, res) => {
         if (response.statusCode === 200) {
           try {
             const results = await db.query("SELECT * FROM words");
+            console.log(body);
 
             res.status(201).json({
               status: "ok",
