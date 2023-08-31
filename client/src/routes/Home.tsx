@@ -1,14 +1,23 @@
-import React from "react";
+import { useState } from "react";
 import Header from "../components/Header";
-import AddSearchMovies from "../components/AddSearchWords";
-import Movies from "../components/WordsList";
+import AddSearchWords from "../components/AddSearchWords";
+import WordsList from "../components/WordsList";
+
+type SearchArr = {
+  id: number;
+  word: string;
+  score: number;
+  tags: string;
+};
 
 function Home() {
+  const [searchResults, setSearchResults] = useState<SearchArr[]>([]); //Keeps track of words searched using datamuse API
+
   return (
     <div className="flex flex-col w-full justify-center items-center">
       <Header />
-      <AddSearchMovies />
-      <Movies />
+      <AddSearchWords setSearchResults={setSearchResults} />
+      <WordsList setSearchResults={setSearchResults} searchResults={searchResults} />
     </div>
   );
 }
