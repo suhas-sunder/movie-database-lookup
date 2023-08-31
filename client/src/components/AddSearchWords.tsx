@@ -1,6 +1,8 @@
 import React from "react";
 
 function AddSearchWords() {
+  
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log("submit");
