@@ -105,7 +105,7 @@ function WordsList() {
                     className="border-2 border-red-700 rounded bg-red-700 text-white text-sm p-1 pl-3 pr-3 hover:bg-white hover:text-red-700"
                     onClick={() => handleDeleteWord(word.id)}
                   >
-                    Delete
+                    Remove
                   </button>
                 </td>
               </tr>
