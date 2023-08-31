@@ -3,8 +3,10 @@ require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3001;
+const datamuse_api = process.env.DATAMUSE_API_KEY;
 const cors = require("cors");
 const db = require("./db");
+const request = require("request");
 
 // // Middleware - Should be defined at the top, or it will simply run the route handler and skip this.
 // // The next function tells our middleware where to pass request (Either next middleware, or route handler)
@@ -21,6 +23,36 @@ app.use(cors());
 // It takes the json object and converts it into a standard object in JavaScript.
 // Without this, req.body property will not work in the post request below.
 app.use(express.json());
+
+//Handle client requests to datamuse API
+app.post("/api/v1/datamuse/search", async (req, res) => {
+  console.log("test");
+
+  if (req.body.data.text) {
+    request(
+      `https://api.datamuse.com/words?ml=${req.body.data.text}&max=10`,
+      async (error, response, body) => {
+        if (response.statusCode === 200) {
+          try {
+            const results = await db.query("SELECT * FROM words");
+
+            res.status(201).json({
+              status: "ok",
+              results: body.length, //It is good practice to return the total number of results being returned
+              data: {
+                words: body,
+              },
+            });
+          } catch (err) {
+            console.log(err);
+          }
+        } else {
+          console.log(error);
+        }
+      }
+    );
+  }
+});
 
 // Get request for all words
 app.get("/api/v1/wordsearch/words", async (req, res) => {
