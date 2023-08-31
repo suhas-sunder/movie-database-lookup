@@ -44,7 +44,7 @@ function AddSearchWords({ setSearchResults }: any) {
 
   return (
     <>
-      <div className="flex m-20 mb-0 gap-5 items-center">
+      <div className="flex m-20 mb-15 gap-5 items-center">
         <label className="text-2xl">Word Search:</label>
         <input
           ref={inputRef}
@@ -53,20 +53,6 @@ function AddSearchWords({ setSearchResults }: any) {
           placeholder="text"
           className="border-2 border-gray-200 rounded text-xl p-2 pl-4 "
         />
-      </div>
-      <div className="flex flex-col items-center gap-3 m-10">
-        <p className="text-1xl">
-          **The Word Bank is a default playlist and is an aggrigate of all words
-          saved. **
-        </p>
-        <p className="text-1xl">
-          **Adding words to any playlist will automatically add it to your Word
-          Bank.**
-        </p>
-        <p className="text-1xl">
-          **Removing words from the Word Bank will remove those words from ALL
-          playlists.**
-        </p>
       </div>
     </>
   );

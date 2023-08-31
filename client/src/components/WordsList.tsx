@@ -2,16 +2,12 @@ import { useRef, useContext, useEffect } from "react";
 import WordSearchAPI from "../apis/WordSearchAPI";
 import { WordsContext } from "../context/WordsContext";
 
-function WordsList({ searchResults, setSearchResults }: any) {
+function WordsList({ tableData, setTableData, hideOption }: any) {
   const { words, setWords } = useContext(WordsContext);
   const renderRef = useRef(false);
 
   const handleAddToPlaylist = async (id: number) => {
-    const targetWordData = searchResults.filter(
-      (word: any) => word.id === id
-    )[0];
-
-    console.log(targetWordData)
+    const targetWordData = tableData.filter((word: any) => word.id === id)[0];
 
     // Don't forget to combine the code below into one function and maybe switch statements for different playlists?
     // Check if word already exists in word bank. If not, add word to bank.
@@ -40,10 +36,7 @@ function WordsList({ searchResults, setSearchResults }: any) {
       renderRef.current = true;
       try {
         const response = await WordSearchAPI.get("/words"); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
-        setWords((prevState: any) => [
-          ...prevState,
-          ...response.data.data.words,
-        ]);
+        setWords(response.data.data.words);
       } catch (err) {
         console.log(err);
       }
@@ -55,13 +48,13 @@ function WordsList({ searchResults, setSearchResults }: any) {
 
   // Hide word from search results (removes it from list)
   const handleHideWord = async (id: number) => {
-    setSearchResults(searchResults.filter((word: any) => word.id !== id));
+    setTableData(tableData.filter((word: any) => word.id !== id));
   };
 
   // Set the current playlist for each word when toggled on the drop-down list in search results table
   const handlePlaylistSelection = (e: any, id: number) => {
-    setSearchResults(
-      searchResults.map((word: any) => {
+    setTableData(
+      tableData.map((word: any) => {
         if (word.id === id) {
           return {
             id: id,
@@ -82,9 +75,11 @@ function WordsList({ searchResults, setSearchResults }: any) {
       <table className="table-auto">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
           <tr>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Hide
-            </th>
+            {hideOption && (
+              <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                Hide
+              </th>
+            )}
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
               Word
             </th>
@@ -100,21 +95,24 @@ function WordsList({ searchResults, setSearchResults }: any) {
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
               Action
             </th>
+            <th className="p-3 text-sm font-semibold tracking-wide text-left"></th>
           </tr>
         </thead>
         <tbody>
-          {searchResults &&
-            searchResults.map((word: any) => (
+          {tableData &&
+            tableData.map((word: any) => (
               <tr key={word.id} className="bg-white">
-                <td className="p-3 text-sm text-gray-700">
-                  <button
-                    aria-label="Add word to playlist"
-                    className="border-2 border-gray-700 bg-gray-700 text-white text-sm p-1 mr-1 w-full h-full hover:bg-white hover:text-gray-700 rounded-full "
-                    onClick={() => handleHideWord(word.id)}
-                  >
-                    X
-                  </button>
-                </td>
+                {hideOption && (
+                  <td className="p-3 text-sm text-gray-700">
+                    <button
+                      aria-label="Add word to playlist"
+                      className="border-2 border-gray-700 bg-gray-700 text-white text-sm p-1 mr-1 w-full h-full hover:bg-white hover:text-gray-700 rounded-full "
+                      onClick={() => handleHideWord(word.id)}
+                    >
+                      X
+                    </button>
+                  </td>
+                )}
                 <td className="p-3 text-sm text-gray-700">{word.word}</td>
                 <td className="p-3 text-sm text-gray-700">{word.score}</td>
                 <td className="p-3 text-sm text-gray-700">

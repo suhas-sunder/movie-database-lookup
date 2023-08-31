@@ -19,9 +19,17 @@ function Home() {
       <Header />
       <AddSearchWords setSearchResults={setSearchResults} />
       <WordsList
-        setSearchResults={setSearchResults}
-        searchResults={searchResults}
+        setTableData={setSearchResults}
+        tableData={searchResults}
+        hideOption={true}
+        playlistOption={true}
       />
+
+      <p className="mt-20 max-w-2xl">
+        Search for words and store them in either the word bank or favourites
+        playlist for future reference. Each playlist can be viewed and managed
+        on its own page by navigating using the nav-bar above.
+      </p>
     </div>
   );
 }
