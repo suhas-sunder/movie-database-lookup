@@ -8,6 +8,7 @@ type SearchArr = {
   word: string;
   score: number;
   tags: string;
+  currentPlaylist: string;
 };
 
 function Home() {

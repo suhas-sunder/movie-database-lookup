@@ -1,7 +1,6 @@
-import { useRef, useContext } from "react";
+import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import DataMuseAPI from "../apis/DataMuseAPI";
-import { WordsContext } from "../context/WordsContext";
 
 function AddSearchWords({ setSearchResults }: any) {
   const inputRef = useRef<any>(null);
@@ -25,6 +24,7 @@ function AddSearchWords({ setSearchResults }: any) {
             word: data.word,
             score: data.score,
             tags: data.tags,
+            currentPlaylist: "wordbank",
           }))
         );
       } else {

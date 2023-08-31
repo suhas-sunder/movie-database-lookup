@@ -1,39 +1,80 @@
-import { useEffect, useRef, useContext, useState } from "react";
+import { useRef, useContext, useEffect } from "react";
 import WordSearchAPI from "../apis/WordSearchAPI";
 import { WordsContext } from "../context/WordsContext";
 
 function WordsList({ searchResults, setSearchResults }: any) {
+  const { words, setWords } = useContext(WordsContext);
   const renderRef = useRef(false);
 
-  const handleAddToPlaylist = (id: number) => {
-    // Add word to words wordbank
-    // Add id to relevant playlist
-    console.log(id);
+  const handleAddToPlaylist = async (id: number) => {
+    const targetWordData = searchResults.filter(
+      (word: any) => word.id === id
+    )[0];
+
+    console.log(targetWordData)
+
+    // Don't forget to combine the code below into one function and maybe switch statements for different playlists?
+    // Check if word already exists in word bank. If not, add word to bank.
+    if (!words.some((word: any) => word.word === targetWordData.word)) {
+      try {
+        // Update word on database through API endpoint on server
+        const response = await WordSearchAPI.post(`/words`, {
+          data: {
+            word: targetWordData.word,
+            score: targetWordData.score,
+            tags: targetWordData.tags,
+          },
+        });
+        setWords((prevState: any) => [...prevState, targetWordData]); //Update word in context state
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    // If a playlist is selected, check if word already exists in playlist. If not, add word to playlist.
   };
 
-  const handleDeleteWord = async (id: number) => {
-    // Remove word from playlist but not wordbank.
-    // Remove word from word bank if deleted from word bank directly.
-    // Removing from wordbank will remove words from all playlists. Display a modal to confirm action.
+  // Load words data
+  useEffect(() => {
+    async function fetchData() {
+      renderRef.current = true;
+      try {
+        const response = await WordSearchAPI.get("/words"); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
+        setWords((prevState: any) => [
+          ...prevState,
+          ...response.data.data.words,
+        ]);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    !renderRef.current && fetchData(); //Checking renderRef stops axios from running twice.
+  }, []);
 
-    // try {
-    //   // Delete word from database
-    //   const response = await WordSearchAPI.delete(`/words/${id}`); //This takes the URL configured in WordSearchAPI and adds "/" to the end before making a get request.
+  const handleRemoveFromPlaylist = (id: number) => {};
 
-    //   if (response.status === 204) {
-    //     // Delete word from state
-    //     setWords(words.filter((word: any) => word.id !== id));
-    //   } else {
-    //     console.log(
-    //       `Could not delete word from database. Response status code ${response.status}`
-    //     );
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
+  // Hide word from search results (removes it from list)
+  const handleHideWord = async (id: number) => {
     setSearchResults(searchResults.filter((word: any) => word.id !== id));
-    console.log(id);
+  };
+
+  // Set the current playlist for each word when toggled on the drop-down list in search results table
+  const handlePlaylistSelection = (e: any, id: number) => {
+    setSearchResults(
+      searchResults.map((word: any) => {
+        if (word.id === id) {
+          return {
+            id: id,
+            word: word.word,
+            score: word.score,
+            tags: word.tags,
+            currentPlaylist: e.target.value.toLowerCase(),
+          };
+        } else {
+          return word;
+        }
+      })
+    );
   };
 
   return (
@@ -69,7 +110,7 @@ function WordsList({ searchResults, setSearchResults }: any) {
                   <button
                     aria-label="Add word to playlist"
                     className="border-2 border-gray-700 bg-gray-700 text-white text-sm p-1 mr-1 w-full h-full hover:bg-white hover:text-gray-700 rounded-full "
-                    onClick={() => handleDeleteWord(word.id)}
+                    onClick={() => handleHideWord(word.id)}
                   >
                     X
                   </button>
@@ -91,6 +132,7 @@ function WordsList({ searchResults, setSearchResults }: any) {
                   <select
                     aria-label="Select a playlist"
                     className="border-2 border-gray-300 rounded p-1 pl-2 text-sm cursor-pointer"
+                    onChange={(e) => handlePlaylistSelection(e, word.id)}
                   >
                     <option>WordBank</option>
                     <option>Favourites</option>
@@ -109,6 +151,7 @@ function WordsList({ searchResults, setSearchResults }: any) {
                   <button
                     aria-label="Add word to playlist"
                     className="border-2 border-red-700 rounded bg-red-700 text-white text-sm p-1 pl-3 pr-3 hover:bg-white hover:text-red-700"
+                    onClick={() => handleRemoveFromPlaylist(word.id)}
                   >
                     Remove
                   </button>

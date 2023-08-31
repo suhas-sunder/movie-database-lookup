@@ -35,7 +35,6 @@ app.post("/api/v1/datamuse/search", async (req, res) => {
         if (response.statusCode === 200) {
           try {
             const results = await db.query("SELECT * FROM words");
-            console.log(body);
 
             res.status(201).json({
               status: "ok",
@@ -133,11 +132,11 @@ app.get("/api/v1/wordsearch/playlists/:id", async (req, res) => {
 });
 
 // Create a word
-app.post("/api/v1/wordsearch/words/:id", async (req, res) => {
+app.post("/api/v1/wordsearch/words", async (req, res) => {
   try {
     const results = await db.query(
       "INSERT INTO words (word, score, tags) VALUES ($1, $2, $3) returning *",
-      [req.body.word, req.body.score, req.body.tags]
+      [req.body.data.word, req.body.data.score, req.body.data.tags]
     );
 
     res.status(201).json({
