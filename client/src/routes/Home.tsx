@@ -16,7 +16,7 @@ function Home() {
 
   return (
     <div className="flex flex-col w-full justify-center items-center">
-      <Header />
+      <Header title={"Word Tracker"}/>
       <AddSearchWords setSearchResults={setSearchResults} />
       <WordsList
         setTableData={setSearchResults}

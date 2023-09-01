@@ -17,7 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/wordbank" element={<WordBank />} />
           <Route path="/favourites" element={<Favourites />} />
-          <Route path="*" element={<h2>404 Not Found!</h2>} />
+          <Route path="*" element={<h1>404 Not Found!</h1>} />
         </Routes>
       </WordsContextProvider>
     </PlaylistContextProvider>
